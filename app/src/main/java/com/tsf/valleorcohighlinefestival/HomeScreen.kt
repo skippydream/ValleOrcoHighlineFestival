@@ -2,7 +2,6 @@ package com.tsf.valleorcohighlinefestival
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,15 +16,16 @@ import java.time.temporal.ChronoUnit
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.ui.platform.LocalContext
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
+import androidx.compose.foundation.lazy.LazyColumn
+import java.io.File
+import java.io.FileOutputStream
+import androidx.core.content.FileProvider
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,100 +40,96 @@ fun HomeScreen(navController: NavController) {
             )
         }
     ) { paddingValues ->
-
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize()
-                .verticalScroll(scrollState)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            item {
+                Text(
+                    text = "WIP! Le informazioni inserite sono ancora casuali",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
 
-            Text(
-                text = "WIP! Le informazioni inserite sono ancora casuali",
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            item {
+                FeatureCard(
+                    title = "Programma Eventi",
+                    description = "Consulta il calendario completo",
+                    icon = Icons.Default.Event,
+                    onClick = { navController.navigate("events") }
+                )
+            }
+            item {
+                FeatureCard(
+                    title = "Info Linee",
+                    description = "Dettagli su ogni highline",
+                    icon = Icons.Default.Terrain,
+                    onClick = { navController.navigate("lines") }
+                )
+            }
+            item {
+                FeatureCard(
+                    title = "Mappa Interattiva",
+                    description = "Visualizza aree e percorsi",
+                    icon = Icons.Default.Map,
+                    onClick = { navController.navigate("map") }
+                )
+            }
+            item {
+                FeatureCard(
+                    title = "Info e Biglietti",
+                    description = "Tutti i dettagli sul festival e come partecipare",
+                    icon = Icons.Default.ConfirmationNumber,
+                    onClick = { navController.navigate("about") }
+                )
+            }
+            item {
+                FeatureCard(
+                    title = "Vai al Festival",
+                    description = "Apri navigazione e copia coordinate",
+                    icon = Icons.Default.Navigation,
+                    onClick = {
+                                                // Crea intent generico per la navigazione
+                        val gmmIntentUri = Uri.parse("google.navigation:q=45.432139,7.259361")
+                        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
 
-            FeatureCard(
-                title = "Programma Eventi",
-                description = "Consulta il calendario completo",
-                icon = Icons.Default.Event,
-                onClick = { navController.navigate("events") }
-            )
-            FeatureCard(
-                title = "Info Linee",
-                description = "Dettagli su ogni highline",
-                icon = Icons.Default.Terrain,
-                onClick = { navController.navigate("lines") }
-            )
-
-            FeatureCard(
-                title = "Mappa Interattiva",
-                description = "Visualizza aree e percorsi",
-                icon = Icons.Default.Map,
-                onClick = { navController.navigate("map") }
-            )
-            FeatureCard(
-                title = "Info e Biglietti",
-                description = "Tutti i dettagli sul festival e come partecipare",
-                icon = Icons.Default.ConfirmationNumber, // icona tipo biglietto 🎟️
-                onClick = { navController.navigate("about") }
-            )
-
-            // Nuova FeatureCard per navigazione a Ceresole Reale
-            FeatureCard(
-                title = "Vai al Festival",
-                description = "Apri navigazione e copia coordinate",
-                icon = Icons.Default.Navigation,
-                onClick = {
-                    // Copia coordinate in clipboard
-                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip = ClipData.newPlainText("Coordinate Festival", "45.432139, 7.259361")
-                    clipboard.setPrimaryClip(clip)
-
-                    // Crea intent navigazione
-                    val gmmIntentUri = Uri.parse("google.navigation:q=45.432139,7.259361")
-                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
-                        setPackage("com.google.android.apps.maps")
+                        // Mostra il chooser per scegliere l'app di navigazione
+                        val chooserIntent = Intent.createChooser(mapIntent, "Scegli app di navigazione")
+                        if (mapIntent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(chooserIntent)
+                        } else {
+                            // Fallback browser se nessuna app disponibile
+                            val browserIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://www.google.com/maps/dir/?api=1&destination=45.432139,7.259361")
+                            )
+                            context.startActivity(browserIntent)
+                        }
                     }
-                    if (mapIntent.resolveActivity(context.packageManager) != null) {
-                        context.startActivity(mapIntent)
-                    } else {
-                        // fallback browser
-                        val browserIntent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://www.google.com/maps/dir/?api=1&destination=45.432139,7.259361")
-                        )
 
-                        context.startActivity(browserIntent)
+                )
+            }
+            item {
+                FeatureCard(
+                    title = "Download Orari Autobus",
+                    description = "Visualizza gli orari del bus per Ceresole",
+                    icon = Icons.Default.DirectionsBus,
+                    onClick = {
+                        val url = "https://www.gtt.to.it/cms/risorse/intercomunale/oraripdf/5137.pdf"
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        context.startActivity(intent)
                     }
-                }
-
-            )
-
-            FeatureCard(
-                title = "Orari Autobus",
-                description = "Visualizza gli orari del bus per Ceresole",
-                icon = Icons.Default.DirectionsBus,
-                onClick = {
-                    val url = "https://www.gtt.to.it/cms/risorse/intercomunale/oraripdf/5137.pdf"
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    context.startActivity(intent)
-                }
-            )
-            
-            FeatureCard(
-                title = "Contatti",
-                description = "Info utili, emergenze e social",
-                icon = Icons.Default.Phone,
-                onClick = { navController.navigate("contacts") }
-            )
-
-            // Qui la FeatureCard con countdown NON cliccabile
-            CountdownFeatureCard()
+                )
+            }
+            item {
+                CountdownFeatureCard()
+            }
         }
+
     }
 }
 
