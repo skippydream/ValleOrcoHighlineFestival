@@ -9,22 +9,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.Alignment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Valle Orco Highline Festival") })
+            TopAppBar(
+                title = { Text("Valle Orco Highline Festival") }
+            )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
+            Text(
+                text = "WIP! Le informazioni inserite sono ancora casuali",
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
             FeatureCard(
                 title = "Programma Eventi",
                 description = "Consulta il calendario completo",
@@ -39,7 +49,7 @@ fun HomeScreen(navController: NavController) {
             )
             FeatureCard(
                 title = "Contatti",
-                description = "Numeri utili e social",
+                description = "Info utili, emergenze e social",
                 icon = Icons.Default.Phone,
                 onClick = { navController.navigate("contacts") }
             )
@@ -57,7 +67,7 @@ fun HomeScreen(navController: NavController) {
 fun FeatureCard(
     title: String,
     description: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     onClick: () -> Unit
 ) {
     Card(
@@ -65,25 +75,45 @@ fun FeatureCard(
         modifier = Modifier
             .fillMaxWidth()
             .height(100.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Start
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
+                    .size(48.dp)
                     .padding(end = 16.dp)
-                    .size(40.dp)
             )
-            Column {
-                Text(text = title, style = MaterialTheme.typography.titleLarge)
-                Text(text = description, style = MaterialTheme.typography.bodyMedium)
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

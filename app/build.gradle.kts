@@ -53,6 +53,13 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    // Maps
+    implementation ("org.osmdroid:osmdroid-android:6.1.14")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+
     // Navigation Compose (versione allineata con BOM)
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
