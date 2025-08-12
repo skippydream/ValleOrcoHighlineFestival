@@ -59,6 +59,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
+    implementation ("com.google.accompanist:accompanist-navigation-material:0.34.0")
+
 
     // Navigation Compose (versione allineata con BOM)
     implementation("androidx.navigation:navigation-compose:2.7.7")

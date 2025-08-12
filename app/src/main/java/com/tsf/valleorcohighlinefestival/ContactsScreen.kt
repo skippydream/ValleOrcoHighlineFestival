@@ -55,7 +55,7 @@ fun ContactsScreen() {
                 description = "Aggiornamenti, foto, eventi live",
                 buttonText = "Instagram"
             ) {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://instagram.com/highlinefestival"))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/torinosulfilo/"))
                 context.startActivity(intent)
             }
         }
